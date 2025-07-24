@@ -6,20 +6,20 @@ class Redmine < Formula
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/arstella-ltd/RedmineCLI/releases/download/untagged-71c8aba9d59ab8768c60/redmine-cli-osx-x64.zip"
+      url "https://github.com/arstella-ltd/RedmineCLI/releases/download/v0.8.0/redmine-cli-osx-x64.zip"
       sha256 "dabf978a0baf9c6b27f77924849c326b1af88e6775029f120a9e514bb2a0fd54"
     else
-      url "https://github.com/arstella-ltd/RedmineCLI/releases/download/untagged-71c8aba9d59ab8768c60/redmine-cli-osx-arm64.zip"
+      url "https://github.com/arstella-ltd/RedmineCLI/releases/download/v0.8.0/redmine-cli-osx-arm64.zip"
       sha256 "b79a6915a6de071d38c5414494c2938aa601689f2d019609e6ab2c659f5bcd81"
     end
   end
 
   on_linux do
     if Hardware::CPU.intel?
-      url "https://github.com/arstella-ltd/RedmineCLI/releases/download/untagged-71c8aba9d59ab8768c60/redmine-cli-linux-x64.zip"
+      url "https://github.com/arstella-ltd/RedmineCLI/releases/download/v0.8.0/redmine-cli-linux-x64.zip"
       sha256 "a8741188c9844a10edb2475d6a7d9d46094545be5272e004ce265ffe247c21b4"
     else
-      url "https://github.com/arstella-ltd/RedmineCLI/releases/download/untagged-71c8aba9d59ab8768c60/redmine-cli-linux-arm64.zip"
+      url "https://github.com/arstella-ltd/RedmineCLI/releases/download/v0.8.0/redmine-cli-linux-arm64.zip"
       sha256 "6047a6bfbfc25a33f7b95b5ec4c659ef2f180be0b0c4d1e71cadcd5c798110b7"
     end
   end
