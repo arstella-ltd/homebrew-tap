@@ -85,6 +85,10 @@ jobs:
           echo "/opt/homebrew/bin" >> $GITHUB_PATH
           eval "$(/opt/homebrew/bin/brew shellenv)"
           
+      - name: Add custom tap for audit
+        run: |
+          brew tap ${{ github.repository }} .
+          
       - name: Run brew audit
         run: |
-          brew audit --strict Formula/redmine.rb
+          brew audit --strict redmine
