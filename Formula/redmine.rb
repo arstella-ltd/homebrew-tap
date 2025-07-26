@@ -29,6 +29,6 @@ class Redmine < Formula
   end
 
   test do
-    system "#{bin}/redmine", "--version"
+    system bin/"redmine", "--version"
   end
 end
