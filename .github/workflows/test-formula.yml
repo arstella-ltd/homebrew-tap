@@ -19,13 +19,10 @@ jobs:
           echo "/opt/homebrew/bin" >> $GITHUB_PATH
           eval "$(/opt/homebrew/bin/brew shellenv)"
           
-      - name: Add custom tap
+      - name: Test formula installation directly
         run: |
-          brew tap ${{ github.repository }} .
-          
-      - name: Test formula installation
-        run: |
-          brew install redmine
+          # Install directly from the checked out formula file
+          brew install --verbose --build-from-source ./Formula/redmine.rb
           
       - name: Verify installation
         run: |
@@ -34,7 +31,11 @@ jobs:
           
       - name: Run brew test
         run: |
-          brew test redmine
+          # First, create a temporary tap for testing
+          brew tap-new local/temp-test
+          cp Formula/redmine.rb $(brew --repository)/Library/Taps/local/homebrew-temp-test/Formula/
+          brew test local/temp-test/redmine
+          brew untap local/temp-test
           
       - name: Clean up
         if: always()
@@ -52,13 +53,10 @@ jobs:
           echo "/home/linuxbrew/.linuxbrew/bin" >> $GITHUB_PATH
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           
-      - name: Add custom tap
+      - name: Test formula installation directly
         run: |
-          brew tap ${{ github.repository }} .
-          
-      - name: Test formula installation
-        run: |
-          brew install redmine
+          # Install directly from the checked out formula file
+          brew install --verbose --build-from-source ./Formula/redmine.rb
           
       - name: Verify installation
         run: |
@@ -67,7 +65,11 @@ jobs:
           
       - name: Run brew test
         run: |
-          brew test redmine
+          # First, create a temporary tap for testing
+          brew tap-new local/temp-test
+          cp Formula/redmine.rb $(brew --repository)/Library/Taps/local/homebrew-temp-test/Formula/
+          brew test local/temp-test/redmine
+          brew untap local/temp-test
           
       - name: Clean up
         if: always()
@@ -85,10 +87,10 @@ jobs:
           echo "/opt/homebrew/bin" >> $GITHUB_PATH
           eval "$(/opt/homebrew/bin/brew shellenv)"
           
-      - name: Add custom tap for audit
-        run: |
-          brew tap ${{ github.repository }} .
-          
       - name: Run brew audit
         run: |
-          brew audit --strict redmine
+          # Create a temporary tap for auditing
+          brew tap-new local/temp-audit
+          cp Formula/redmine.rb $(brew --repository)/Library/Taps/local/homebrew-temp-audit/Formula/
+          brew audit --strict local/temp-audit/redmine
+          brew untap local/temp-audit
