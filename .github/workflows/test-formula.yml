@@ -1,0 +1,111 @@
+name: Test Homebrew Formula
+
+on:
+  push:
+    branches: [ main, "**" ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Homebrew
+        run: |
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || true
+          echo "/opt/homebrew/bin" >> $GITHUB_PATH
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+          
+      - name: Test formula installation directly
+        run: |
+          # Install directly from the checked out formula file
+          brew install --verbose --build-from-source ./Formula/redmine.rb
+          
+      - name: Verify installation
+        run: |
+          which redmine
+          redmine --version
+          
+      - name: Configure Git
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          
+      - name: Run brew test
+        run: |
+          # First, create a temporary tap for testing
+          brew tap-new local/temp-test
+          cp Formula/redmine.rb $(brew --repository)/Library/Taps/local/homebrew-temp-test/Formula/
+          brew test local/temp-test/redmine
+          brew untap local/temp-test
+          
+      - name: Clean up
+        if: always()
+        run: |
+          brew uninstall redmine || true
+
+  test-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Homebrew
+        run: |
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          echo "/home/linuxbrew/.linuxbrew/bin" >> $GITHUB_PATH
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          
+      - name: Test formula installation directly
+        run: |
+          # Install directly from the checked out formula file
+          brew install --verbose --build-from-source ./Formula/redmine.rb
+          
+      - name: Verify installation
+        run: |
+          which redmine
+          redmine --version
+          
+      - name: Configure Git
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          
+      - name: Run brew test
+        run: |
+          # First, create a temporary tap for testing
+          brew tap-new local/temp-test
+          cp Formula/redmine.rb $(brew --repository)/Library/Taps/local/homebrew-temp-test/Formula/
+          brew test local/temp-test/redmine
+          brew untap local/temp-test
+          
+      - name: Clean up
+        if: always()
+        run: |
+          brew uninstall redmine || true
+
+  audit-formula:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Homebrew
+        run: |
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || true
+          echo "/opt/homebrew/bin" >> $GITHUB_PATH
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+          
+      - name: Configure Git
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          
+      - name: Run brew audit
+        run: |
+          # Create a temporary tap for auditing
+          brew tap-new local/temp-audit
+          cp Formula/redmine.rb $(brew --repository)/Library/Taps/local/homebrew-temp-audit/Formula/
+          brew audit --strict local/temp-audit/redmine
+          brew untap local/temp-audit
