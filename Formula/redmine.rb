@@ -1,26 +1,26 @@
 class Redmine < Formula
   desc "GitHub CLI-like tool for managing Redmine tickets"
   homepage "https://github.com/arstella-ltd/RedmineCLI"
-  version "0.8.0"
+  version "0.8.1"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.intel?
       url "https://github.com/arstella-ltd/RedmineCLI/releases/download/v#{version}/redmine-cli-#{version}-osx-x64.zip"
-      sha256 "dabf978a0baf9c6b27f77924849c326b1af88e6775029f120a9e514bb2a0fd54"
+      sha256 "f53144566a1b60df48f623b263bcf04b0d392cb4b6f0bdf0cb35cfa56130f2e7"
     else
       url "https://github.com/arstella-ltd/RedmineCLI/releases/download/v#{version}/redmine-cli-#{version}-osx-arm64.zip"
-      sha256 "b79a6915a6de071d38c5414494c2938aa601689f2d019609e6ab2c659f5bcd81"
+      sha256 "921c242f8d9edcb7b7d9aac94c64b4a1ae2d676887c62e41e6d55055a3b6e9d2"
     end
   end
 
   on_linux do
     if Hardware::CPU.intel?
       url "https://github.com/arstella-ltd/RedmineCLI/releases/download/v#{version}/redmine-cli-#{version}-linux-x64.zip"
-      sha256 "a8741188c9844a10edb2475d6a7d9d46094545be5272e004ce265ffe247c21b4"
+      sha256 "4bb0a956cdb13986568bb58474b6b18216bbea432c5f4adc92ce28c8874fc570"
     else
       url "https://github.com/arstella-ltd/RedmineCLI/releases/download/v#{version}/redmine-cli-#{version}-linux-arm64.zip"
-      sha256 "6047a6bfbfc25a33f7b95b5ec4c659ef2f180be0b0c4d1e71cadcd5c798110b7"
+      sha256 "92a51f5a7cbba037fdebea23a2e3918d870420b6b0fec67afbbb99e5aea9bfd9"
     end
   end
 
