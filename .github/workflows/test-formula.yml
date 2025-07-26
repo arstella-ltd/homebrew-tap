@@ -1,0 +1,90 @@
+name: Test Homebrew Formula
+
+on:
+  push:
+    branches: [ main, "**" ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Homebrew
+        run: |
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || true
+          echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> $GITHUB_ENV
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+          
+      - name: Add custom tap
+        run: |
+          brew tap ${{ github.repository }} .
+          
+      - name: Test formula installation
+        run: |
+          brew install redmine
+          
+      - name: Verify installation
+        run: |
+          which redmine
+          redmine --version
+          
+      - name: Run brew test
+        run: |
+          brew test redmine
+          
+      - name: Clean up
+        if: always()
+        run: |
+          brew uninstall redmine || true
+
+  test-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Homebrew
+        run: |
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> $GITHUB_ENV
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          
+      - name: Add custom tap
+        run: |
+          brew tap ${{ github.repository }} .
+          
+      - name: Test formula installation
+        run: |
+          brew install redmine
+          
+      - name: Verify installation
+        run: |
+          which redmine
+          redmine --version
+          
+      - name: Run brew test
+        run: |
+          brew test redmine
+          
+      - name: Clean up
+        if: always()
+        run: |
+          brew uninstall redmine || true
+
+  audit-formula:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Homebrew
+        run: |
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || true
+          echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> $GITHUB_ENV
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+          
+      - name: Run brew audit
+        run: |
+          brew audit --strict Formula/redmine.rb
