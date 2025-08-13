@@ -10,6 +10,11 @@ on:
 jobs:
   test-macos:
     runs-on: macos-latest
+    strategy:
+      matrix:
+        formula:
+          - redmine
+          - qx
     steps:
       - uses: actions/checkout@v4
       
@@ -19,36 +24,41 @@ jobs:
           echo "/opt/homebrew/bin" >> $GITHUB_PATH
           eval "$(/opt/homebrew/bin/brew shellenv)"
           
-      - name: Test formula installation directly
+      - name: Test ${{ matrix.formula }} formula installation
         run: |
           # Install directly from the checked out formula file
-          brew install --verbose --build-from-source ./Formula/redmine.rb
+          brew install --verbose --build-from-source ./Formula/${{ matrix.formula }}.rb
           
-      - name: Verify installation
+      - name: Verify ${{ matrix.formula }} installation
         run: |
-          which redmine
-          redmine --version
+          which ${{ matrix.formula }}
+          ${{ matrix.formula }} --version
           
       - name: Configure Git
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           
-      - name: Run brew test
+      - name: Run brew test for ${{ matrix.formula }}
         run: |
           # First, create a temporary tap for testing
           brew tap-new local/temp-test
-          cp Formula/redmine.rb $(brew --repository)/Library/Taps/local/homebrew-temp-test/Formula/
-          brew test local/temp-test/redmine
+          cp Formula/${{ matrix.formula }}.rb $(brew --repository)/Library/Taps/local/homebrew-temp-test/Formula/
+          brew test local/temp-test/${{ matrix.formula }}
           brew untap local/temp-test
           
       - name: Clean up
         if: always()
         run: |
-          brew uninstall redmine || true
+          brew uninstall ${{ matrix.formula }} || true
 
   test-linux:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        formula:
+          - redmine
+          - qx
     steps:
       - uses: actions/checkout@v4
       
@@ -58,36 +68,41 @@ jobs:
           echo "/home/linuxbrew/.linuxbrew/bin" >> $GITHUB_PATH
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           
-      - name: Test formula installation directly
+      - name: Test ${{ matrix.formula }} formula installation
         run: |
           # Install directly from the checked out formula file
-          brew install --verbose --build-from-source ./Formula/redmine.rb
+          brew install --verbose --build-from-source ./Formula/${{ matrix.formula }}.rb
           
-      - name: Verify installation
+      - name: Verify ${{ matrix.formula }} installation
         run: |
-          which redmine
-          redmine --version
+          which ${{ matrix.formula }}
+          ${{ matrix.formula }} --version
           
       - name: Configure Git
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           
-      - name: Run brew test
+      - name: Run brew test for ${{ matrix.formula }}
         run: |
           # First, create a temporary tap for testing
           brew tap-new local/temp-test
-          cp Formula/redmine.rb $(brew --repository)/Library/Taps/local/homebrew-temp-test/Formula/
-          brew test local/temp-test/redmine
+          cp Formula/${{ matrix.formula }}.rb $(brew --repository)/Library/Taps/local/homebrew-temp-test/Formula/
+          brew test local/temp-test/${{ matrix.formula }}
           brew untap local/temp-test
           
       - name: Clean up
         if: always()
         run: |
-          brew uninstall redmine || true
+          brew uninstall ${{ matrix.formula }} || true
 
   audit-formula:
     runs-on: macos-latest
+    strategy:
+      matrix:
+        formula:
+          - redmine
+          - qx
     steps:
       - uses: actions/checkout@v4
       
@@ -102,10 +117,10 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           
-      - name: Run brew audit
+      - name: Run brew audit for ${{ matrix.formula }}
         run: |
           # Create a temporary tap for auditing
           brew tap-new local/temp-audit
-          cp Formula/redmine.rb $(brew --repository)/Library/Taps/local/homebrew-temp-audit/Formula/
-          brew audit --strict local/temp-audit/redmine
+          cp Formula/${{ matrix.formula }}.rb $(brew --repository)/Library/Taps/local/homebrew-temp-audit/Formula/
+          brew audit --strict local/temp-audit/${{ matrix.formula }}
           brew untap local/temp-audit
