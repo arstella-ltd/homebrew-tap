@@ -27,7 +27,7 @@ jobs:
       - name: Test ${{ matrix.formula }} formula installation
         run: |
           # Install directly from the checked out formula file
-          brew install --verbose --build-from-source ./Formula/${{ matrix.formula }}.rb
+          brew install --verbose ./Formula/${{ matrix.formula }}.rb
           
       - name: Verify ${{ matrix.formula }} installation
         run: |
@@ -71,7 +71,7 @@ jobs:
       - name: Test ${{ matrix.formula }} formula installation
         run: |
           # Install directly from the checked out formula file
-          brew install --verbose --build-from-source ./Formula/${{ matrix.formula }}.rb
+          brew install --verbose ./Formula/${{ matrix.formula }}.rb
           
       - name: Verify ${{ matrix.formula }} installation
         run: |
